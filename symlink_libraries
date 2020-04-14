@@ -22,5 +22,6 @@ end
 
 Dir['vendor/*'].map do |folder|
   command = analyze_folder folder
+  puts "Now executing command -> #{command}"
   puts `#{command}`
 end
