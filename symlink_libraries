@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+GOPATH_SRC = `echo $GOPATH`.strip + '/src'
+PWD        = Dir.pwd
+
+def analyze_folder(folder)
+  if folder.include? 'github.com'
+    create_command(folder, 2)
+  else
+    create_command(folder, 1)
+  end
+end
+
+def create_command(folder, type)
+  return "ln -s #{PWD}/#{folder} #{GOPATH_SRC}" if type == 1
+
+  if type == 2
+    "ln -s #{PWD}/#{folder}/* #{GOPATH_SRC}/#{folder.gsub('vendor/', '')}"
+  end
+end
+
+Dir['vendor/*'].map do |folder|
+  command = analyze_folder folder
+  puts `#{command}`
+end
